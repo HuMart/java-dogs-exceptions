@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 
@@ -55,5 +56,25 @@ public class DogController
             throw new ResourceNotFoundException("Dogs of breed " + breed + " not found");
         }
         return new ResponseEntity<>(rtnDogs, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/dogtable")
+    public ModelAndView displayDogTable()
+    {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("dogs");
+        mav.addObject("dogList", DogsinitialApplication.ourDogList.dogList);
+        return mav;
+    }
+
+    @GetMapping(value = "/aptdogs")
+    public ModelAndView displayDogsTable()
+    {
+        ArrayList<Dog> aptDogs = DogsinitialApplication.ourDogList.findDogs(d -> d.isApartmentSuitable());
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("dogs");
+        mav.addObject("dogList", aptDogs);
+
+        return mav;
     }
 }
