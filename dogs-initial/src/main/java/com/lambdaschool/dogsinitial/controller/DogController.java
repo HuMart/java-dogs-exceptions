@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 @RestController
@@ -23,6 +24,7 @@ public class DogController
     {
         return new ResponseEntity<>(DogsinitialApplication.ourDogList.dogList, HttpStatus.OK);
     }
+
 
     // localhost:2019/dogs/{id}
     @GetMapping(value = "/{id}",
@@ -63,6 +65,8 @@ public class DogController
     {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dogs");
+        DogsinitialApplication.ourDogList.dogList.sort((d1, d2) -> (d1.getBreed().compareToIgnoreCase(d2.getBreed())));
+
         mav.addObject("dogList", DogsinitialApplication.ourDogList.dogList);
         return mav;
     }
