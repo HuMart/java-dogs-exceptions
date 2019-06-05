@@ -3,21 +3,22 @@ package com.lambdaschool.dogsinitial.controller;
 import com.lambdaschool.dogsinitial.exception.ResourceNotFoundException;
 import com.lambdaschool.dogsinitial.model.Dog;
 import com.lambdaschool.dogsinitial.DogsinitialApplication;
+import com.lambdaschool.dogsinitial.model.MessageDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
+@Service
 @RestController
 @RequestMapping("/dogs")
 public class DogController
@@ -31,7 +32,7 @@ public class DogController
     public ResponseEntity<?> getAllDogs()
     {
         logger.info("/dogs/dogs accesed");
-//        MessageDetail message = new MessageDetail("/dogs/dogtable accessed", 1, true);
+
         return new ResponseEntity<>(DogsinitialApplication.ourDogList.dogList, HttpStatus.OK);
     }
 
@@ -44,6 +45,7 @@ public class DogController
                     long id)
     {
         logger.info("dogs/ " + id + " accesed");
+        MessageDetail message = new MessageDetail("/dogs/ " +id+" accessed", 1, true);
         Dog rtnDog;
         if ((DogsinitialApplication.ourDogList.findDog(d -> (d.getId()) == id)) == null)
         {
@@ -76,6 +78,7 @@ public class DogController
     public ModelAndView displayDogTable()
     {
         logger.info("dogs/dogtable accesed");
+        MessageDetail message = new MessageDetail("/dogs/dogtable accessed", 1, true);
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dogs");
         DogsinitialApplication.ourDogList.dogList.sort((d1, d2) -> (d1.getBreed().compareToIgnoreCase(d2.getBreed())));
@@ -87,6 +90,7 @@ public class DogController
     @GetMapping(value = "/aptdogs")
     public ModelAndView displayDogsTable()
     {
+        MessageDetail message = new MessageDetail("/dogs/aptdogs accessed", 1, true);
         ArrayList<Dog> aptDogs = DogsinitialApplication.ourDogList.findDogs(d -> d.isApartmentSuitable());
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dogs");
