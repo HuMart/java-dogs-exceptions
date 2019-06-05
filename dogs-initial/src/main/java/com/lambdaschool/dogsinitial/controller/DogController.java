@@ -3,6 +3,10 @@ package com.lambdaschool.dogsinitial.controller;
 import com.lambdaschool.dogsinitial.exception.ResourceNotFoundException;
 import com.lambdaschool.dogsinitial.model.Dog;
 import com.lambdaschool.dogsinitial.DogsinitialApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +22,16 @@ import java.util.ArrayList;
 @RequestMapping("/dogs")
 public class DogController
 {
+    private static final Logger logger = LoggerFactory.getLogger(DogController.class);
+
+    @Autowired
+    RabbitTemplate rt;
     //localhost:2019/dogs/dogs
     @GetMapping(value = "/dogs")
     public ResponseEntity<?> getAllDogs()
     {
+        logger.info("/dogs/dogs accesed");
+//        MessageDetail message = new MessageDetail("/dogs/dogtable accessed", 1, true);
         return new ResponseEntity<>(DogsinitialApplication.ourDogList.dogList, HttpStatus.OK);
     }
 
@@ -33,6 +43,7 @@ public class DogController
             @PathVariable
                     long id)
     {
+        logger.info("dogs/ " + id + " accesed");
         Dog rtnDog;
         if ((DogsinitialApplication.ourDogList.findDog(d -> (d.getId()) == id)) == null)
         {
@@ -51,6 +62,7 @@ public class DogController
             @PathVariable
                     String breed)
     {
+        logger.info("dogs/breeds/ " + breed + " accesed");
         ArrayList<Dog> rtnDogs = DogsinitialApplication.ourDogList.
                 findDogs(d -> d.getBreed().toUpperCase().equals(breed.toUpperCase()));
         if (rtnDogs.size() == 0)
@@ -63,6 +75,7 @@ public class DogController
     @GetMapping(value = "/dogtable")
     public ModelAndView displayDogTable()
     {
+        logger.info("dogs/dogtable accesed");
         ModelAndView mav = new ModelAndView();
         mav.setViewName("dogs");
         DogsinitialApplication.ourDogList.dogList.sort((d1, d2) -> (d1.getBreed().compareToIgnoreCase(d2.getBreed())));
