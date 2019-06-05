@@ -16,8 +16,10 @@ public class DogsinitialApplication
     public static final String QUEUE_NAME_DOGS_BREED = "DogsBreedQueue";
     public static final String QUEUE_NAME_DOGS = "DogsQueue";
 
+    public static DogList ourDogList;
     public static void main(String[] args)
     {
+        ourDogList = new DogList();
         SpringApplication.run(DogsinitialApplication.class, args);
     }
 
@@ -53,6 +55,5 @@ public class DogsinitialApplication
     }
 
 }
-
 
 
